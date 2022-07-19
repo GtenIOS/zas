@@ -1,3 +1,6 @@
 [submodule "X64InstrBuilder"]
   path = res
   url = https://github.com/GtenIOS/zas-X64InstrBuilder.git
+[submodule "common"]
+  path = libs/common
+  url = https://github.com/GtenIOS/zas-common.git
