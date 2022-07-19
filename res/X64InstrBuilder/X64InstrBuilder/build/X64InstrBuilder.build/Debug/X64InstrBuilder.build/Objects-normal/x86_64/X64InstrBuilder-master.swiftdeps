@@ -1,6 +1,0 @@
-version: "Apple Swift version 5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)"
-options: "7c210285ad91bfaec743ad1cdc75c0a36a39d4994ee93a2203d801d0d6081829"
-build_start_time: [1655208902, 516680002]
-build_end_time: [1655208903, 907247066]
-inputs:
-  "/Users/jiten/Documents/_Projects/Zig/zas/res/X64InstrBuilder/X64InstrBuilder/main.swift": [1655208752, 514192342]
