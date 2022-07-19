@@ -4,3 +4,15 @@
 [submodule "common"]
   path = libs/common
   url = https://github.com/GtenIOS/zas-common.git
+[submodule "encx64"]
+  path = libs/encx64
+  url = https://github.com/GtenIOS/zas-encx64.git
+[submodule "fileio"]
+  path = libs/fileio
+  url = https://github.com/GtenIOS/zas-fileio.git
+[submodule "lexer"]
+  path = libs/lexer
+  url = https://github.com/GtenIOS/zas-lexer.git
+[submodule "out"]
+  path = libs/out
+  url = https://github.com/GtenIOS/zas-out.git
