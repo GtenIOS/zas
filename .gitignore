@@ -9,3 +9,5 @@ zig-out/
 **/.DS_Store
 *.out
 **/*.csv
+**/out/
+**/bin/
