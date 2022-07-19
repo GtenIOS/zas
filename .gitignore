@@ -1,0 +1,13 @@
+zig-cache/
+zig-out/
+/release/
+/debug/
+/build/
+/build-*/
+/test/
+.DS_Store
+**/.DS_Store
+*.out
+**/*.csv
+**/out/
+**/bin/
