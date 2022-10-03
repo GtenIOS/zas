@@ -165,12 +165,13 @@ pub const Parser = struct {
     fn parseData(self: *Self, size: u4) !void {
         var bytes = std.ArrayList(u8).init(self.allocator);
         defer bytes.deinit();
+        errdefer bytes.deinit();
 
         while (try self.nextToken()) |token| {
-            const tok_bytes = try token.bytesValue();
-            if (tok_bytes.len == 1) {
-                try bytes.append(tok_bytes[0]);
-            } else try bytes.appendSlice(try token.bytesValue());
+            const tok_bytes = try token.bytesValue(self.*.allocator);
+            defer tok_bytes.deinit();
+            errdefer tok_bytes.deinit();
+            try bytes.appendSlice(tok_bytes.items);
 
             // data are comma separated and ends with new line
             _ = self.accept(TokenKind.com) catch {
@@ -234,7 +235,9 @@ pub const Parser = struct {
         if (self.curr_sym) |sym| {
             sym.imm = imm;
         } else {
-            try self.curr_sec.data.?.appendSlice(try imm.encode());
+            const bytes_array = try imm.encode(self.*.allocator);
+            defer bytes_array.deinit();
+            try self.curr_sec.data.?.appendSlice(bytes_array.items);
         }
     }
 
@@ -404,8 +407,13 @@ pub const Parser = struct {
         }
 
         inline fn toOpers(self: Operands) []Operand {
-            var opers = [4]Operand{ self.opers[0].oper, self.opers[1].oper, self.opers[2].oper, self.opers[3].oper };
-            return if (self.count == 0) &[_]Operand{} else opers[0..self.count];
+            // Static variable to hold opers
+            // Otherwise, the release build would crash
+            const Opers = struct {
+                var opers: [4]Operand = undefined;
+            };
+            Opers.opers = [4]Operand{ self.opers[0].oper, self.opers[1].oper, self.opers[2].oper, self.opers[3].oper };
+            return if (self.count == 0) &[_]Operand{} else Opers.opers[0..self.count];
         }
 
         inline fn unknownSym(self: Operands) ?*UnknownSym {
@@ -683,8 +691,7 @@ pub const Parser = struct {
 
             // Parse an operand here
             if (token.type == TokenKind.lbrk) {
-                const mem = try self.parseMemoryOperand(size_ovrd);
-                try opers.setOper(mem);
+                try opers.setOper(try self.parseMemoryOperand(size_ovrd));
             } else {
                 try opers.setOper(try self.parseOperand(token, size_ovrd));
             }
