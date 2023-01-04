@@ -3,31 +3,31 @@ const std = @import("std");
 const pkgs = struct {
     const fileio = std.build.Pkg{
         .name = "fileio",
-        .path = .{ .path = "libs/fileio/fileio.zig" },
+        .source = .{ .path = "libs/fileio/fileio.zig" },
         .dependencies = &[_]std.build.Pkg{},
     };
     const common = std.build.Pkg{
         .name = "common",
-        .path = .{ .path = "libs/common/common.zig" },
+        .source = .{ .path = "libs/common/common.zig" },
         .dependencies = &[_]std.build.Pkg{},
     };
     const lexer = std.build.Pkg{
         .name = "lexer",
-        .path = .{ .path = "libs/lexer/lexer.zig" },
+        .source = .{ .path = "libs/lexer/lexer.zig" },
         .dependencies = &[_]std.build.Pkg{
             common,
         },
     };
     const encx64 = std.build.Pkg{
         .name = "encx64",
-        .path = .{ .path = "libs/encx64/encx64.zig" },
+        .source = .{ .path = "libs/encx64/encx64.zig" },
         .dependencies = &[_]std.build.Pkg{
             common,
         },
     };
     const elf = std.build.Pkg{
         .name = "elf",
-        .path = .{ .path = "libs/out/elf/elf.zig" },
+        .source = .{ .path = "libs/out/elf/elf.zig" },
         .dependencies = &[_]std.build.Pkg{
             common,
             fileio,
@@ -35,7 +35,7 @@ const pkgs = struct {
     };
     const macho = std.build.Pkg{
         .name = "macho",
-        .path = .{ .path = "libs/out/macho/macho.zig" },
+        .source = .{ .path = "libs/out/macho/macho.zig" },
         .dependencies = &[_]std.build.Pkg{
             common,
             fileio,
@@ -43,7 +43,7 @@ const pkgs = struct {
     };
     const out = std.build.Pkg{
         .name = "out",
-        .path = .{ .path = "libs/out/out.zig" },
+        .source = .{ .path = "libs/out/out.zig" },
         .dependencies = &[_]std.build.Pkg{
             elf,
             macho,

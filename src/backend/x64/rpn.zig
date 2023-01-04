@@ -81,7 +81,7 @@ pub const Rpn = struct {
         }
     }
 
-    pub inline fn genOperNode(self: *Self, tree: *Ast, oper: Oper) error{ InvalidExpression, NodeNotAnOperand, OutOfMemory }!*AstNode {
+    pub fn genOperNode(self: *Self, tree: *Ast, oper: Oper) error{ InvalidExpression, NodeNotAnOperand, OutOfMemory }!*AstNode {
         var left: *AstNode = undefined;
         if (self.outq.popOrNull()) |node| {
             if (node.isOper()) |op| {

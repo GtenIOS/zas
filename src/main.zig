@@ -52,10 +52,10 @@ pub fn main() anyerror!void {
     if (parser.errors > 0) {
         std.log.err("Could not assemble the file `{s}` due to previous {d} error(s)", .{ input_file_name, parser.errors });
     }
-    
+
     // Linux
     // try out.elf.Elf.genPieExe64(allocator, parser.sections.items, if (Reltab.relocations) |relocs| relocs.items else null, "a.out");
-    
+
     // Darwin, i.e. Mac
     try out.macho.Macho.genPieExe64(allocator, parser.sections.items, if (Reltab.relocations) |relocs| relocs.items else null, "a.out");
 }

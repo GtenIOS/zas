@@ -76,7 +76,7 @@ pub const Symtab = struct {
     pub fn init(allocator: std.mem.Allocator, name: []const u8, global: bool, should_init: bool, section: *const Section) !*Symbol {
         symbols = std.ArrayList(Symbol).init(allocator);
         try symbols.?.append(.{ .idx = @intCast(u32, symbols.?.items.len), .name = name, .global = global, .did_init = should_init, .section = section, .ofst_in_sec = section.size() });
-        try return &symbols.?.items[symbols.?.items.len - 1];
+        return &symbols.?.items[symbols.?.items.len - 1];
     }
 
     pub fn add(allocator: std.mem.Allocator, name: []const u8, global: bool, should_init: bool, section: *Section) !*Symbol {

@@ -529,7 +529,6 @@ pub const Parser = struct {
         SizeTooBigForRelativeOffset,
     } || AcceptError;
     inline fn parseMemoryOperand(self: *Self, size_ovrd: ?SizeKeyword) ParseMemoryOperandError!ParserOperand {
-        _ = self;
         var scale: ?u4 = null;
         var displacement: ?Imm = null;
         var expecting_scale: bool = false;
@@ -745,7 +744,7 @@ pub const Parser = struct {
         PrefixNotAllowed,
         InvalidRegisterEncoding,
     } || ParseOperandsError;
-    inline fn parseInstr(self: *Self, id: []const u8) ParseInstrError!?ParseInstrInfo {
+    fn parseInstr(self: *Self, id: []const u8) ParseInstrError!?ParseInstrInfo {
         var prefix: ?Prefix = null;
         var mnem: []const u8 = id;
         if (PrefixKeyword.isPrefix(id)) |pfx| {

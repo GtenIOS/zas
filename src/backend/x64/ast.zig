@@ -91,7 +91,7 @@ pub const Ast = struct {
         if (oper_node.right.isOper()) try resolveOper(oper_node.right);
         const right = if (oper_node.right.getImm()) |imm| imm else return error.CouldNotResolveTreeToConst;
 
-        const size: u8 = @maximum(left.size(), right.size());
+        const size: u8 = @max(left.size(), right.size());
         const left64: u64 = left.toImm64();
         const right64: u64 = right.toImm64();
 
