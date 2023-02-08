@@ -191,6 +191,21 @@ pub const Parser = struct {
         try self.curr_sec.appendSlice(self.allocator, bytes.items);
     }
 
+    fn parseReserveData(self: *Self, size: u4) !void {
+        if (self.curr_sym) |curr_sym| {
+            if (curr_sym.section.*.type != .Bss) return error.UseOfResKeywordInInvalidSection;
+        }
+        else {
+            return error.InvalidUseOfResKeyword;
+        }
+        const tok = try self.accept(TokenKind.num);
+        const num_val = try (try tok.numVal()).toISize();
+        if (num_val <= 0) return error.InvalidReserveSize;
+        const res_size = @intCast(usize, num_val) * size;
+        self.curr_sym.?.*.res_size = res_size;
+        self.curr_sec.addResSize(res_size);
+    }
+
     fn parseConstExpr(self: *Self) !Ast {
         var rpn = Rpn.init(self.allocator);
         defer rpn.deinit();
@@ -247,10 +262,10 @@ pub const Parser = struct {
             .Dw => return self.parseData(2),
             .Dd => return self.parseData(4),
             .Dq => return self.parseData(8),
-            .Resb => std.log.info("Found keyword: resb", .{}),
-            .Resw => std.log.info("Found keyword: resw", .{}),
-            .Resd => std.log.info("Found keyword: resd", .{}),
-            .Resq => std.log.info("Found keyword: resq", .{}),
+            .Resb => return self.parseReserveData(1),
+            .Resw => return self.parseReserveData(2),
+            .Resd => return self.parseReserveData(4),
+            .Resq => return self.parseReserveData(8),
             .Equ => return try self.parseConstData(),
         }
     }
