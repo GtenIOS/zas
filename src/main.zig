@@ -58,6 +58,7 @@ pub fn main() anyerror!void {
 
     if (parser.errors > 0) {
         std.log.err("Could not assemble the file `{s}` due to previous {d} error(s)", .{ input_file_name, parser.errors });
+        return error.CouldNotAssemble;
     }
 
     // Linux

@@ -165,17 +165,20 @@ pub const Parser = struct {
     fn parseData(self: *Self, size: u4) !void {
         var bytes = std.ArrayList(u8).init(self.allocator);
         defer bytes.deinit();
-        errdefer bytes.deinit();
 
         while (try self.nextToken()) |token| {
             const tok_bytes = try token.bytesValue(self.*.allocator);
             defer tok_bytes.deinit();
-            errdefer tok_bytes.deinit();
             try bytes.appendSlice(tok_bytes.items);
 
             // data are comma separated and ends with new line
             _ = self.accept(TokenKind.com) catch {
-                _ = try self.accept(TokenKind.nl);
+                _ = self.accept(TokenKind.nl) catch |err| {
+                    if (err == error.MissingToken) {
+                        break;
+                    }
+                    return err;
+                };
                 break;
             };
         }
@@ -712,7 +715,12 @@ pub const Parser = struct {
             _ = self.accept(TokenKind.com) catch {
                 if (try self.nextToken()) |tok_peek| {
                     self.peek_token = tok_peek;
-                    _ = try self.accept(TokenKind.nl);
+                    _ = self.accept(TokenKind.nl) catch |err| {
+                        if (err == error.MissingToken) {
+                            break;
+                        }
+                        return err;
+                    };
                 }
                 break;
             };
