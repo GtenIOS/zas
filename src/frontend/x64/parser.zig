@@ -434,7 +434,7 @@ pub const Parser = struct {
             return if (self.count == 0) &[_]Operand{} else Opers.opers[0..self.count];
         }
 
-        inline fn unknownSym(self: Operands) ?*UnknownSym {
+        inline fn hasUnknownSym(self: Operands) ?*UnknownSym {
             for (self.opers[0..self.count]) |oper| {
                 if (oper.unknwn_sym) |unknwn_sym| return unknwn_sym;
             }
@@ -778,7 +778,7 @@ pub const Parser = struct {
 
         var operands: Operands = try self.parseOperands();
 
-        if (operands.unknownSym()) |unknwn_sym| {
+        if (operands.hasUnknownSym()) |unknwn_sym| {
             try unknwn_sym.addLine(self.line, try LineInfo.init(self.allocator, LineInfo.total_count, self.line_tokens.items, self.curr_sec.size(), null, self.curr_sym, self.times));
             return null;
         } else {
